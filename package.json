@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-token-auth": "^2.3.8"
+  }
+}
