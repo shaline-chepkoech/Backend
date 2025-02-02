@@ -1,46 +1,47 @@
+import os
 from flask import Flask
 from flask_restx import Api
-from config import DevConfig
-from models import User
-from models import Itinerary
-from exts import db
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+
+from config import DevConfig, ProdConfig
+from models import User, Itinerary  # Ensure these models exist in models.py
+from exts import db
 from auth import auth_ns
 from itineraries import itinerary_ns
 
-def create_app(config):
-    app = Flask(__name__)
-    app.config.from_object(config)
-#app.config['JWT_SECRET_KEY'] = 'password'  
 
+def create_app():
+    app = Flask(__name__)
+
+    # Select config based on environment
+    if "RENDER" in os.environ:
+        app.config.from_object(ProdConfig)
+    else:
+        app.config.from_object(DevConfig)
+
+    # Enable CORS
     CORS(app)
 
+    # Initialize extensions
     db.init_app(app)
-
-
     migrate = Migrate(app, db)
-
     JWTManager(app)
 
+    # Set up API documentation
     api = Api(app, doc='/docs')
-    
     api.add_namespace(itinerary_ns)
     api.add_namespace(auth_ns)
 
-
-
+    # Shell context for Flask CLI
     @app.shell_context_processor
     def make_shell_context():
-        return {
-            'db': db, 
-            "Itinerary": Itinerary,
-            "User": User
-            }
-        
-    return app   
-     
+        return {"db": db, "Itinerary": Itinerary, "User": User}
+
+    return app
+  
     
    
     
