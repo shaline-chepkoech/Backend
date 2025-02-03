@@ -15,18 +15,13 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
 
 class ProdConfig(Config):
-    # Get environment variables with fallback to raise an error if missing
-    db_user = os.getenv('DB_USER')
-    db_password = os.getenv('DB_PASSWORD')
-    db_host = os.getenv('DB_HOST', 'localhost')  # Default to 'localhost' if not set
-    db_port = os.getenv('DB_PORT', '5432')  # Default to '5432' if not set
-    db_name = os.getenv('DB_NAME')
+    # Get the DATABASE_URL environment variable, used by Heroku/Render in production
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
-    # Validate that required environment variables are provided
-    if not db_user or not db_password or not db_name:
-        raise ValueError("Missing required database credentials (DB_USER, DB_PASSWORD, DB_NAME).")
-
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    # Ensure DATABASE_URL is set, otherwise raise an error
+    if not SQLALCHEMY_DATABASE_URI:
+        raise ValueError("Missing required DATABASE_URL environment variable.")
+    
     DEBUG = False
 
 class TestConfig(Config):
