@@ -19,11 +19,9 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
 
-    # Select config based on environment
-    if "RENDER" in os.environ:
-        app.config.from_object(ProdConfig)
-    else:
-        app.config.from_object(DevConfig)
+    # Load database configuration from environment variables
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "default_secret_key")
 
     # Enable CORS
     CORS(app)

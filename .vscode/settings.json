@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "Backend",
+            "database": "postgresql://backend_2ewy_user:rlhh1tiIeZmVw5Vz90uJN9zTwdq8zGCT@dpg-cugh2t3v2p9s7394mhng-a.oregon-postgres.render.com/backend_2ewy"
+        }
+    ]
+}
