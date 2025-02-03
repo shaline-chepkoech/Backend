@@ -15,7 +15,7 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, "prod.db")  # Now using SQLite
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, "dev.db")  # Now using SQLite
     DEBUG = False
 
 class TestConfig(Config):
