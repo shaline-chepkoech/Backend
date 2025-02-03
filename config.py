@@ -15,8 +15,9 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, "dev.db")  # Now using SQLite
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "postgresql://shalinechepkoech:NqXCmDyqfJuP9G0RQtCBLKD3NJrkF97i@dpg-cug8o0lds78s738ddtmg-a/itineraryplanner_productiondb")
     DEBUG = False
+
 
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
