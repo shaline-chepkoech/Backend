@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
 
 from config import DevConfig, ProdConfig
 from models import User, Itinerary  # Ensure these models exist in models.py
@@ -12,6 +13,8 @@ from exts import db
 from auth import auth_ns
 from itineraries import itinerary_ns
 
+# Load environment variables from .env file
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
@@ -27,7 +30,7 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
-    migrate = Migrate(app, db)
+    Migrate(app, db)
     JWTManager(app)
 
     # Set up API documentation
@@ -41,9 +44,14 @@ def create_app():
         return {"db": db, "Itinerary": Itinerary, "User": User}
 
     return app
-  
-    
-   
+
+# Create the Flask app using the appropriate configuration
+app = create_app()
+
+if __name__ == '__main__':
+    # Ensure the app runs on the appropriate host and port (useful for local dev)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
+
     
 # class Itinerary(db.Model):
 #     __tablename__ = "Itineraries"
