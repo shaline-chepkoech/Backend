@@ -35,12 +35,18 @@ def create_app():
     api.add_namespace(itinerary_ns)
     api.add_namespace(auth_ns)
 
+    # Default route for health check or homepage
+    @app.route("/")
+    def home():
+        return {"message": "Welcome to the API!"}, 200
+
     # Shell context for Flask CLI
     @app.shell_context_processor
     def make_shell_context():
         return {"db": db, "Itinerary": Itinerary, "User": User}
 
     return app
+
   
     
    
