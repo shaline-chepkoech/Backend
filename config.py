@@ -1,5 +1,5 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -15,13 +15,19 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
 
 class ProdConfig(Config):
-    # Get the DATABASE_URL environment variable, used by Heroku/Render in production
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    # Get database credentials
+    DB_USER = os.getenv('DB_USER')
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    DB_HOST = os.getenv('DB_HOST', 'localhost')  # Default to localhost
+    DB_PORT = os.getenv('DB_PORT', '5432')  # Default to 5432
+    DB_NAME = os.getenv('DB_NAME')
 
-    # Ensure DATABASE_URL is set, otherwise raise an error
-    if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("Missing required DATABASE_URL environment variable.")
-    
+    # Ensure all required environment variables are set
+    if not DB_USER or not DB_PASSWORD or not DB_NAME:
+        raise ValueError("Missing required database credentials (DB_USER, DB_PASSWORD, DB_NAME).")
+
+    # Construct the DATABASE_URL correctly
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     DEBUG = False
 
 class TestConfig(Config):
